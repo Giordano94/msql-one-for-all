@@ -1,6 +1,20 @@
   CREATE DATABASE IF NOT EXISTS SpotifyClone;
 
   USE SpotifyClone;
+
+  CREATE TABLE user_plan (
+    plan_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    plan_type VARCHAR(250) NOT NULL,
+    plan_value DOUBLE NOT NULL
+)  engine = InnoDB;
+
+    INSERT INTO user_plan(plan_type, plan_value)
+VALUES
+  ('gratuito', 0.00),
+  ('familiar', 7.99),
+  ('universitário', 5.99),
+  ('pessoal', 6.99);
+
   
 CREATE TABLE user (
     user_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -12,60 +26,8 @@ CREATE TABLE user (
         REFERENCES user_plan (plan_id)
 )  engine = InnoDB;
 
-CREATE TABLE user_plan (
-    plan_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    plan_type VARCHAR(250) NOT NULL,
-    plan_value DOUBLE NOT NULL
-)  engine = InnoDB;
 
-CREATE TABLE artist (
-    artist_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    artist_name VARCHAR(250) NOT NULL
-) engine = InnoDB;
-
-CREATE TABLE album (
-    album_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    album_name VARCHAR(250) NOT NULL,
-    release_year INT,
-    artist_id INT,
-    FOREIGN KEY (artist_id)
-        REFERENCES artist (artist_id)
-)  engine = InnoDB;
-
-CREATE TABLE song (
-    song_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    song_name VARCHAR(250) NOT NULL,
-    duration_song INT,
-    album_id INT,
-    artist_id INT,
-    FOREIGN KEY (album_id)
-        REFERENCES album (album_id),
-    FOREIGN KEY (artist_id)
-        REFERENCES artist (artist_id)
-) engine = InnoDB;
-
-CREATE TABLE following_artist (
-    user_id INT,
-    artist_id INT,
-    CONSTRAINT PRIMARY KEY (user_id , artist_id),
-    FOREIGN KEY (user_id)
-        REFERENCES user (user_id),
-    FOREIGN KEY (artist_id)
-        REFERENCES artist (artist_id)
-)  engine = InnoDB;
-
-CREATE TABLE playback_history (
-    user_id INTEGER,
-    song_id INTEGER,
-    reproduction_date DATETIME,
-    CONSTRAINT PRIMARY KEY (user_id , song_id),
-    FOREIGN KEY (user_id)
-        REFERENCES user (user_id),
-    FOREIGN KEY (song_id)
-        REFERENCES song (song_id)
-) engine = InnoDB;
-
-	INSERT INTO user(user_name, plan_id, user_age, signature_date )
+INSERT INTO user(user_name, plan_id, user_age, signature_date )
 VALUES
   ('Barbara Liskov', 1,	82, '2019-10-20'),
   ('Robert Cecil Martin', 1, 58, '2017-01-06'),
@@ -78,12 +40,10 @@ VALUES
   ('Judith Butler', 4, 45,	'2020-05-13'),
   ('Jorge Amado', 4, 58, '2017-02-17');
 
-    INSERT INTO user_plan(plan_type, plan_value)
-VALUES
-  ('gratuito', 0.00),
-  ('familiar', 7.99),
-  ('universitário', 5.99),
-  ('pessoal', 6.99);
+CREATE TABLE artist (
+    artist_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    artist_name VARCHAR(250) NOT NULL
+) engine = InnoDB;
 
   INSERT INTO artist(artist_name)
 VALUES
@@ -94,6 +54,14 @@ VALUES
   ('Blind Guardian'),
   ('Nina Simone');
 
+CREATE TABLE album (
+    album_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    album_name VARCHAR(250) NOT NULL,
+    release_year INT,
+    artist_id INT,
+    FOREIGN KEY (artist_id)
+        REFERENCES artist (artist_id)
+)  engine = InnoDB;
 
   INSERT INTO album(album_name, release_year, artist_id)
 VALUES
@@ -106,6 +74,17 @@ VALUES
 	('Somewhere Far Beyond',2007, 5),
 	('I Put A Spell On You', 2012, 6);
 
+CREATE TABLE song (
+    song_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    song_name VARCHAR(250) NOT NULL,
+    duration_song INT,
+    album_id INT,
+    artist_id INT,
+    FOREIGN KEY (album_id)
+        REFERENCES album (album_id),
+    FOREIGN KEY (artist_id)
+        REFERENCES artist (artist_id)
+) engine = InnoDB;
 
 	INSERT INTO song(song_name, duration_song, album_id, artist_id)
 VALUES
@@ -120,7 +99,17 @@ VALUES
 	('The Bard’s Song', 244, 7, 5),
 	('Feeling Good', 100, 8, 6);
 
-	INSERT INTO following_artist( user_id , artist_id)
+CREATE TABLE following_artist (
+    user_id INT,
+    artist_id INT,
+    CONSTRAINT PRIMARY KEY (user_id , artist_id),
+    FOREIGN KEY (user_id)
+        REFERENCES user (user_id),
+    FOREIGN KEY (artist_id)
+        REFERENCES artist (artist_id)
+)  engine = InnoDB;
+
+INSERT INTO following_artist( user_id , artist_id)
   VALUES
   (1, 1),
 	(1, 2),
@@ -136,6 +125,18 @@ VALUES
 	(7, 6),
 	(9, 3),
 	(10, 2);
+
+CREATE TABLE playback_history (
+    user_id INTEGER,
+    song_id INTEGER,
+    reproduction_date DATETIME,
+    CONSTRAINT PRIMARY KEY (user_id , song_id),
+    FOREIGN KEY (user_id)
+        REFERENCES user (user_id),
+    FOREIGN KEY (song_id)
+        REFERENCES song (song_id)
+) engine = InnoDB;
+	
 
 	INSERT INTO playback_history(user_id, song_id, reproduction_date)
 VALUES
