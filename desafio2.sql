@@ -1,4 +1,3 @@
-USE SpotifyClone;
 
 SELECT 
     COUNT(DISTINCT sng.song_id) AS cancoes,

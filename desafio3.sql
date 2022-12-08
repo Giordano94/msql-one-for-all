@@ -1,4 +1,4 @@
-USE SpotifyClone;
+
 
 SELECT 
     usr.user_name AS usuario,

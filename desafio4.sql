@@ -1,6 +1,4 @@
 -- desafio 4
-USE SpotifyClone;
-
 SELECT 
     usr.user_name AS usuario,
     IF(MAX(YEAR(plh.reproduction_date)) >= 2021,
